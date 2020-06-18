@@ -1,2 +1,2 @@
 # nvim
-My neovim confiuration file
+My neovim configuration file. For backup purpose.
