@@ -34,6 +34,7 @@ set lazyredraw    " improve scrolling performance when navigating through large 
 set tabstop=4    " show existing tab with 4 spaces width
 set shiftwidth=4    " when indenting with '>', use 4 spaces width
 set expandtab    " On pressing tab, insert 4 spaces
+set clipboard+=unnamedplus
 
 filetype on
 filetype plugin on
@@ -158,19 +159,23 @@ call plug#begin('~/.vim/plugged')
 " Airline
 Plug 'vim-airline/vim-airline'
 
-" Snazzy
+" Theme
 Plug 'connorholyday/vim-snazzy'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
 " Taglist
 Plug 'majutsushi/tagbar'
 
 " Auto complete
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', { 'tag': 'v0.0.81'}
 
 " Editor Enhancement
 Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-surround'
 Plug 'godlygeek/tabular'
+Plug 'petertriho/nvim-scrollbar'
+Plug 'kevinhwang91/nvim-hlslens'
 
 " Find and replace
 Plug 'brooth/far.vim'
@@ -191,7 +196,152 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 
 " Startify
 Plug 'mhinz/vim-startify'
 
+" Emmet
+Plug 'mattn/emmet-vim'
+
+" TypeScript
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+
+" colorizer
+Plug 'lilydjwg/colorizer'
+
+
+" prettier
+" Plug 'prettier/vim-prettier', {
+  " \ 'do': 'yarn install --frozen-lockfile --production',
+  " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
+
+" htmldjango
+Plug 'yaegassy/coc-htmldjango', {'do': 'yarn install --frozen-lockfile'}
+
+" Tag along
+Plug 'AndrewRadev/tagalong.vim'
+
+" Bracey (Live server)
+Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server'}
+
+" Sass color
+Plug 'shmargum/vim-sass-colors'
+
+" Android
+Plug 'hsanson/vim-android'
+
+" Jsdoc
+Plug 'heavenshell/vim-jsdoc', {'for': ['javascript', 'javascript.jsx','typescript'], 'do': 'make install'}
+
+" Codi
+Plug 'metakirby5/codi.vim'
+
 call plug#end()
+
+
+" ===
+" === nvim-scrollbar
+" ===
+lua <<EOF
+local colors = require("tokyonight.colors").setup()
+require("scrollbar").setup()
+require("scrollbar.handlers.search").setup()
+require("scrollbar").setup({
+    show = true,
+    show_in_active_only = false,
+    set_highlights = true,
+    handle = {
+        text = " ",
+        color = "#C0C0C0",
+        cterm = nil,
+        highlight = "CursorColumn",
+        hide_if_all_visible = false, -- Hides handle if all lines are visible
+    },
+    marks = {
+        Search = {
+            text = { "-", "=" },
+            priority = 0,
+            color = "orange",
+            cterm = nil,
+            highlight = "Search",
+        },
+        Error = {
+            text = { "-", "=" },
+            priority = 1,
+            color = colors.error,
+            cterm = nil,
+            highlight = "DiagnosticVirtualTextError",
+        },
+        Warn = {
+            text = { "-", "=" },
+            priority = 2,
+            color = colors.warn,
+            cterm = nil,
+            highlight = "DiagnosticVirtualTextWarn",
+        },
+        Info = {
+            text = { "-", "=" },
+            priority = 3,
+            color = colors.info,
+            cterm = nil,
+            highlight = "DiagnosticVirtualTextInfo",
+        },
+        Hint = {
+            text = { "-", "=" },
+            priority = 4,
+            color = colors.hint,
+            cterm = nil,
+            highlight = "DiagnosticVirtualTextHint",
+        },
+        Misc = {
+            text = { "-", "=" },
+            priority = 5,
+            color = colors.purple,
+            cterm = nil,
+            highlight = "Normal",
+        },
+    },
+    excluded_buftypes = {
+        "terminal",
+    },
+    excluded_filetypes = {
+        "prompt",
+        "TelescopePrompt",
+    },
+    autocmd = {
+        render = {
+            "BufWinEnter",
+            "TabEnter",
+            "TermEnter",
+            "WinEnter",
+            "CmdwinLeave",
+            "TextChanged",
+            "VimResized",
+            "WinScrolled",
+        },
+        clear = {
+            "BufWinLeave",
+            "TabLeave",
+            "TermLeave",
+            "WinLeave",
+        },
+    },
+    handlers = {
+        diagnostic = true,
+        search = true, -- Requires hlslens to be loaded, will run require("scrollbar.handlers.search").setup() for you
+    },
+})
+EOF
+
+
+" ===
+" === nvim-hlslens
+" ===
+noremap <silent> = <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
+            \<Cmd>lua require('hlslens').start()<CR>
+noremap <silent> - <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
+            \<Cmd>lua require('hlslens').start()<CR>
+noremap * *<Cmd>lua require('hlslens').start()<CR>
+noremap # #<Cmd>lua require('hlslens').start()<CR>
+noremap g* g*<Cmd>lua require('hlslens').start()<CR>
+noremap g# g#<Cmd>lua require('hlslens').start()<CR>
 
 
 " ===
@@ -443,6 +593,10 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
+
+" Android
+let g:android_sdk_path = '/home/aron/Android/Sdk'
 
 " ===
 " === Color Scheme
