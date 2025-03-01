@@ -53,6 +53,7 @@ endif
 " ====
 " ==== Basic mappings
 " ====
+let mapleader=" "
 
 " Save & quit
 noremap Q :q<CR>
@@ -92,10 +93,10 @@ noremap <silent> J 5j
 " noremap <LEADER>k <C-w>k
 " noremap <LEADER>j <C-w>j
 " noremap <LEADER>h <C-w>h
-noremap <A-l> <C-w>l
-noremap <A-k> <C-w>k
-noremap <A-j> <C-w>j
-noremap <A-h> <C-w>h
+noremap <LEADER>l <C-w>l
+noremap <LEADER>k <C-w>k
+noremap <LEADER>j <C-w>j
+noremap <LEADER>h <C-w>h
 inoremap <A-h> <C-\><C-N><C-w>h
 inoremap <A-j> <C-\><C-N><C-w>j
 inoremap <A-k> <C-\><C-N><C-w>k
@@ -167,8 +168,7 @@ Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'majutsushi/tagbar'
 
 " Auto complete
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc.nvim', { 'tag': 'v0.0.81'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Editor Enhancement
 Plug 'preservim/nerdcommenter'
@@ -469,19 +469,19 @@ else
   set signcolumn=yes
 endif
 
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? "\<C-p>" : "\<C-h>"
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
@@ -492,7 +492,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 if exists('*complete_info')
   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+  inoremap <expr> <cr> coc#pum#visible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
 " Use `[g` and `]g` to navigate diagnostics
