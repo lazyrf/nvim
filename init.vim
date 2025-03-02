@@ -222,7 +222,7 @@ Plug 'AndrewRadev/tagalong.vim'
 Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server'}
 
 " Sass color
-Plug 'shmargum/vim-sass-colors'
+" Plug 'shmargum/vim-sass-colors'
 
 " Android
 Plug 'hsanson/vim-android'
